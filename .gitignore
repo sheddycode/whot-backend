@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Environment variables (actual secrets)
+.env
+
+# Optional: OS junk, logs, etc.
+.DS_Store
+*.log
+dist/
+build/
