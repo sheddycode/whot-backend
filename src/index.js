@@ -16,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.get('/', (req, res) => res.json({ ok: true, service: 'whot-backend' }));
 app.get('/health', (req, res) => res.json({ ok: true, service: 'whot-backend' }));
 
 app.use('/api/users', usersRoutes);
@@ -30,4 +31,5 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Whot backend running on port ${PORT}`));
+const HOST = '0.0.0.0';
+app.listen(PORT, HOST, () => console.log(`Whot backend running on ${HOST}:${PORT}`));
