@@ -1,20 +1,18 @@
-const { supabaseAdmin } = require('../config/supabase');
-
-/**
- * Expects: Authorization: Bearer <supabase access token>
- * The mobile app gets this token from supabase.auth.getSession() after login.
- */
+// In your auth.js middleware
 async function requireAuth(req, res, next) {
   try {
     const header = req.headers.authorization || '';
     const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+
+    console.log('🔑 Received token:', token ? token.substring(0, 20) + '...' : 'null');
 
     if (!token) {
       return res.status(401).json({ error: 'Missing bearer token' });
     }
 
     const { data, error } = await supabaseAdmin.auth.getUser(token);
-    if (error || !data?.user) {
+    if (error) {
+      console.error('❌ getUser error:', error.message);   // <-- important!
       return res.status(401).json({ error: 'Invalid or expired session' });
     }
 
@@ -25,5 +23,3 @@ async function requireAuth(req, res, next) {
     res.status(500).json({ error: 'Auth check failed' });
   }
 }
-
-module.exports = { requireAuth };
