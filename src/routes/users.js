@@ -1,6 +1,7 @@
+// src/routes/users.js
 const express = require('express');
 const { supabaseAdmin } = require('../config/supabase');
-const { requireAuth } = require('../middleware/auth');
+const { requireAuth } = require('../middleware/auth');   // ✅ ensure this path is correct
 
 const router = express.Router();
 
@@ -19,7 +20,10 @@ router.get('/search', requireAuth, async (req, res) => {
     .neq('id', req.user.id)
     .limit(20);
 
-  if (error) return res.status(500).json({ error: error.message });
+  if (error) {
+    console.error('Search error:', error.message);
+    return res.status(500).json({ error: error.message });
+  }
   res.json({ users: data });
 });
 
@@ -37,7 +41,10 @@ router.get('/me', requireAuth, async (req, res) => {
     .eq('user_id', req.user.id)
     .single();
 
-  if (pErr || wErr) return res.status(500).json({ error: (pErr || wErr).message });
+  if (pErr || wErr) {
+    console.error('Profile/wallet error:', (pErr || wErr).message);
+    return res.status(500).json({ error: (pErr || wErr).message });
+  }
   res.json({ profile, wallet });
 });
 
